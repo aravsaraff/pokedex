@@ -13,6 +13,7 @@ const PokemonForm: React.FC<PokemonFormProps> = ({ onSubmit }) => {
     e.preventDefault();
     onSubmit(pokemonName);
   };
+  
   const style: React.CSSProperties = {
     padding: "5px",
     marginTop: "12px" 

@@ -3,6 +3,7 @@ import "@fontsource/poppins";
 import { withTRPC } from "@trpc/next";
 import { AppType } from "next/dist/shared/lib/utils";
 import type { ServerRouter } from "@/server/router";
+import 'dotenv/config';
 
 const App: AppType = ({ Component, pageProps }) => {
   return <Component {...pageProps} />;
@@ -14,7 +15,7 @@ export default withTRPC<ServerRouter>({
       ? `https://${process.env.VERCEL_URL}/api/trpc`
       : "http://localhost:3000/api/trpc";
 
-    console.log(url)
+    console.log(process.env.VERCEL_URL)
 
     return { url };
   },

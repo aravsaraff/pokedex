@@ -21,6 +21,7 @@
     "@trpc/react": "^9.24.0",
     "@trpc/server": "^9.24.0",
     "@vercel/postgres": "^0.8.0",
+    "dotenv": "^16.4.5",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
