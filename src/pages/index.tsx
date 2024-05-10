@@ -6,6 +6,7 @@ import PokedexTable from "../components/PokedexTable";
 import PokemonNamesForm from "../components/PokemonNamesForm";
 import PokemonTypesForm from "../components/PokemonTypesForm";
 import { trpc } from "../utils/trpc";
+import { Pokemon } from "@prisma/client";
 
 const IndexPage: React.FC = () => {
 	const [pokemon, setPokemon] = useState<any>(null);
@@ -38,7 +39,7 @@ const IndexPage: React.FC = () => {
 		try {
 		  // Call the query to get all Pokémon records
 		  const pokemonRecords = await getAllPokemonQuery.refetch();
-		  setAllPokemonArray(pokemonRecords.data);
+		  setAllPokemonArray(pokemonRecords.data || []);
 		} catch (error) {
 		  console.error("Failed to get all Pokémon records:", error);
 		}
