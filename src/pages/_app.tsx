@@ -15,8 +15,6 @@ export default withTRPC<ServerRouter>({
       ? `https://${process.env.VERCEL_URL}/api/trpc`
       : "http://localhost:3000/api/trpc";
 
-    console.log(process.env.VERCEL_URL)
-
     return { url };
   },
   ssr: true,

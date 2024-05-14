@@ -1,13 +1,9 @@
 import React from "react";
 import { TableRow, TableCell, Typography, Avatar } from "@mui/material";
+import { Pokemon } from "@prisma/client";
 
 interface PokemonRowProps {
-  pokemon: {
-    id: number;
-    name: string;
-    type: string;
-    sprite: string;
-  };
+  pokemon: Pokemon
 }
 
 const PokemonRow: React.FC<PokemonRowProps> = ({ pokemon }) => {

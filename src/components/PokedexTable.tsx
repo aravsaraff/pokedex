@@ -2,14 +2,10 @@
 import React from "react";
 import { Table, TableBody, TableContainer, Paper, Button } from "@mui/material";
 import PokemonRow from "./PokemonRow";
+import { Pokemon } from "@prisma/client";
 
 interface PokedexTableProps {
-  pokemonArray: {
-    id: number;
-    name: string;
-    type: string;
-    sprite: string;
-  }[];
+  pokemonArray: Pokemon[];
 }
 
 const PokedexTable: React.FC<PokedexTableProps> = ({ pokemonArray }) => {
@@ -17,8 +13,8 @@ const PokedexTable: React.FC<PokedexTableProps> = ({ pokemonArray }) => {
     <TableContainer component={Paper}>
       <Table>
         <TableBody>
-          {pokemonArray.map((pokemon, index) => (
-            <PokemonRow key={index} pokemon={pokemon} />
+          {pokemonArray && pokemonArray.map((pokemon, index) => (
+            pokemon && <PokemonRow key={index} pokemon={pokemon} />
           ))}
         </TableBody>
       </Table>
