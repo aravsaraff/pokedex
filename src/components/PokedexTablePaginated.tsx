@@ -14,13 +14,7 @@ interface PokedexTablePaginatedProps {
 }
 
 const PokedexTablePaginated: React.FC<PokedexTablePaginatedProps> = ({ pokemonArray, total, page, limit, handlePageChange }) => {
-  // const [page, setPage] = useState(1);
-  // const limit = 3;
-
-  // const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-  //   setPage(value);
-  // };
-
+  
   return (
     <Box>
       {pokemonArray && (
