@@ -1,46 +1,38 @@
 import React, { useState } from "react";
-import { Container, Table, TableBody, TableContainer, Paper, Button } from "@mui/material";
+import { Container, Box, Table, TableBody, TableContainer, Paper, Button, Typography, CircularProgress, TextField } from "@mui/material";
 import PokemonForm from "../components/PokemonForm";
-import PokemonRow from "../components/PokemonRow";
 import PokedexTable from "../components/PokedexTable";
-import PokemonNamesForm from "../components/PokemonNamesForm";
-import PokemonTypesForm from "../components/PokemonTypesForm";
+import PokedexTablePaginated from "../components/PokedexTablePaginated";
+import PokemonMultiForm from "../components/PokemonMultiForm";
+import FilterablePokedexTable from "../components/FilterablePokedexTable";
 import { trpc } from "../utils/trpc";
 
 const IndexPage: React.FC = () => {
-	const [pokemonName, setPokemonName] = useState<string>("");
-	const [pokemonNames, setPokemonNames] = useState<string[]>([]);
-	const [pokemonTypes, setPokemonTypes] = useState<string[]>([]);
 	const [allPokemonArray, setAllPokemonArray] = useState<any[]>([]);
+	const [page, setPage] = useState(1);
+	const [total, setTotal] = useState<number>(0);
+	const limit = 3;
 
-	const getAllPokemonQuery = trpc.useQuery(["getAll"], {
-		enabled: false
+	const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+		setPage(value);
+	};
+
+	const {data: allPokemons, isError, isLoading} = trpc.useQuery(["getAll", {page, limit}], {
+		keepPreviousData: true
 	});
 
 	const createSampleRecordsMutation = trpc.useMutation(["createSample"]);
 
-	const getPokemonQuery = trpc.useQuery(["get", { name: pokemonName }], {
-		enabled: !!pokemonName
-	});
-
-	const getPokemonArrayByNameQuery = trpc.useQuery(["filterByName", { names: pokemonNames }], {
-		enabled: !!pokemonNames.length
-	});
-
-	const getPokemonArrayByTypeQuery = trpc.useQuery(["filterByType", { types: pokemonTypes }], {
-		enabled: !!pokemonTypes.length
-	});
-
-	const handleGetAllPokemon = async () => {
-		try {
-		  // Call the query to get all Pokémon records
-		  const { data, error, isLoading } = await getAllPokemonQuery.refetch();
-			// const pokemonRecords = await trpc.useQuery(['getAll']).refetch();
-		  data && setAllPokemonArray(data || []);
-		} catch (error) {
-		  console.error("Failed to get all Pokémon records:", error);
-		}
-	  };
+	// const handleGetAllPokemon = async () => {
+	// 	try {
+	// 	  // Call the query to get all Pokémon records
+	// 	  const { data, error, isLoading } = await getAllPokemonQuery.refetch();
+	// 	  data?.pokemons && setAllPokemonArray(data.pokemons || []);
+	// 	  data?.total && setTotal(data.total);
+	// 	} catch (error) {
+	// 	  console.error("Failed to get all Pokémon records:", error);
+	// 	}
+	//   };
 
 	const handleCreateSampleRecords = async () => {
 		try {
@@ -51,41 +43,28 @@ const IndexPage: React.FC = () => {
 		}
 	};
 
-	const handleGetPokemon = (formInput: string) => {
-		setPokemonName(formInput)
-	}
-
-	const handleGetPokemonArrayByName = (formInput: string[]) => {
-		setPokemonNames(formInput);
-	};
-
-	const handleGetPokemonArrayByType = (formInput: string[]) => {
-		setPokemonTypes(formInput);
-	};
-
 	return (
 		<Container>
+			<Typography variant="h2" gutterBottom>
+				Pokedex
+			</Typography>
 			<Button onClick={handleCreateSampleRecords} variant="contained" color="primary">
 				Create Sample Data
 			</Button>
-			<Button onClick={handleGetAllPokemon} variant="contained" color="primary">
+			{/* <Button onClick={handleGetAllPokemon} variant="contained" color="primary">
 				View Sample Data
-			</Button>
-			<PokedexTable pokemonArray={allPokemonArray} />
-			<PokemonForm onSubmit={handleGetPokemon} />
-			<TableContainer component={Paper}>
-				<Table>
-					<TableBody>
-						{getPokemonQuery.data && <PokemonRow pokemon={getPokemonQuery.data!} />}
-					</TableBody>
-				</Table>
-			</TableContainer>
-			<PokemonNamesForm onSubmit={handleGetPokemonArrayByName} />
-			<PokedexTable pokemonArray={getPokemonArrayByNameQuery.data!} />
-			<PokemonTypesForm onSubmit={handleGetPokemonArrayByType} />
-			<PokedexTable pokemonArray={getPokemonArrayByTypeQuery.data!} />
+			</Button> */}
+			{allPokemons && <PokedexTablePaginated 
+				pokemonArray={allPokemons.pokemons}
+				total={allPokemons.total} 
+				page={page} 
+				limit={limit} 
+				handlePageChange={handlePageChange}
+			/>}
+			<PokemonForm />
+			<PokemonMultiForm />
+			<FilterablePokedexTable />
 		</Container>
-
 	);
 };
 
